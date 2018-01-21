@@ -1,7 +1,11 @@
 # bitfieldpy
 Python3 porting of [bitfield](https://github.com/drom/bitfield) with all respect
+to the original designer.
+
+The library works exactly same as original program, except some of command line options.
 
 # Install
+The library requires svgwrite and attrdict libraries.
 `pip3 install git+https://github.com/K4zuki/bitfieldpy.git`
 
 # Options
