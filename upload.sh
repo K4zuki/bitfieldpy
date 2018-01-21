@@ -1,3 +1,3 @@
 #!/bin/bash
 
-twine upload - -skip - existing - -repository pypi dist / *
+twine upload --skip-existing --repository pypi dist/*
