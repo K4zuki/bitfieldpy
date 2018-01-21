@@ -50,7 +50,7 @@ optional arguments:
 | `--font-font_weight`/`-W` | Y        | font weight               | "normal"     |
 | `--font-size`/`-S`        | Y        | font size                 | 14           |
 
-![Example](tests/data/images/wave.svg)
+![Example](tests/images/wave.svg)
 
 # License
 **MIT License (c) 2018 Kazuki Yamamoto**
