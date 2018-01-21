@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# https://github.com/drom/bitfield
+""" bitfieldpy
+With great respect to original designer:
+A Python3 porting of bitfield nodeJS module(https://github.com/drom/bitfield)
+MIT License 2018 (c) Kazuki Yamamoto
+"""
 
 import svgwrite
 import argparse
