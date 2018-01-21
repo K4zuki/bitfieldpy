@@ -51,3 +51,6 @@ optional arguments:
 | `--font-size`/`-S`        | Y        | font size                 | 14           |
 
 ![Example](tests/data/images/wave.svg)
+
+# License
+**MIT License (c) 2018 Kazuki Yamamoto**
