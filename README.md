@@ -6,7 +6,9 @@ The library works exactly same as original program, except some of command line 
 
 # Install
 The library requires svgwrite and attrdict libraries.
-`pip3 install git+https://github.com/K4zuki/bitfieldpy.git`
+
+- `pip3 install bitfieldpy`(install archive from pypi)
+- `pip3 install git+https://github.com/K4zuki/bitfieldpy.git`(edge/developing version)
 
 # Options
 
