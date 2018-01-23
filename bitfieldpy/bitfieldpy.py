@@ -199,7 +199,7 @@ class BitField(object):
             self.args.index = i
             dwg.add(self.lane())
 
-        dwg.save()
+        dwg.save(pretty=True)
 
 
 def main():
