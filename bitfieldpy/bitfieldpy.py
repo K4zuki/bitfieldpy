@@ -15,9 +15,8 @@ from attrdict import AttrDict
 class BitField(object):
 
     def __init__(self, args):
-        with open(args.input, "r") as f:
-            self.src = json.load(f, object_hook=AttrDict)
         self.args = args
+        self.src = json.load(self.args.src, object_hook=AttrDict)
         # print(self.args)
         # print(self.src)
 
@@ -111,7 +110,6 @@ class BitField(object):
                     fill="black")
                 )
             if elem.get("attr"):
-
                 attrs.add(svgwrite.text.Text(elem.attr,
                                              x=[step * (self.args.mod - ((msbm + lsbm) / 2) - 1)],
                                              font_size=fontsize,
@@ -120,6 +118,7 @@ class BitField(object):
                                              )
                           )
             return
+
         [sub(bits, fontconfig, d) for d in self.src]
         ret = svgwrite.container.Group()
         ret.add(blanks)
@@ -154,6 +153,7 @@ class BitField(object):
 
         def tf(e, i):
             return True if e.lsb == i else False
+
         while j:
             if (j == self.args.mod) or any([tf(elem, i) for elem in self.src]):
                 res.add(self.vline((vspace / 2), j * (hspace / mod)))
@@ -225,8 +225,9 @@ def main():
     if args.svg is None or args.input is None:
         parser.print_help()
     else:
-        bf = BitField(args)
-        bf.render()
+        with open(args.input, "r") as args.src:
+            bf = BitField(args)
+            bf.render()
 
 
 if __name__ == "__main__":
