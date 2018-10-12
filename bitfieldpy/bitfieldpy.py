@@ -16,7 +16,7 @@ class BitField(object):
 
     def __init__(self, args):
         self.args = args
-        self.src = json.load(self.args.src, object_hook=AttrDict)
+        self.src = json.loads(self.args.src, object_hook=AttrDict)
         # print(self.args)
         # print(self.src)
 
@@ -225,7 +225,8 @@ def main():
     if args.svg is None or args.input is None:
         parser.print_help()
     else:
-        with open(args.input, "r") as args.src:
+        with open(args.input, "r") as input:
+            args.src = input.read()
             bf = BitField(args)
             bf.render()
 
