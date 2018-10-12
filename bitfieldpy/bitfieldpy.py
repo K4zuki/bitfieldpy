@@ -11,12 +11,27 @@ import argparse
 import json
 from attrdict import AttrDict
 
+default = AttrDict({
+    "vspace": 80,
+    "hspace": 640,
+    "lanes": 2,
+    "bits": 32,
+    "font_family": "sans-serif",
+    "font_weight": "normal",
+    "font_size": 14,
+})
+
 
 class BitField(object):
 
     def __init__(self, args):
+
         self.args = args
         self.src = json.loads(self.args.src, object_hook=AttrDict)
+        # set default values
+        for key, value in zip(default.keys(), default.values()):
+            self.args[key] = self.args.get(key, value)
+
         # print(self.args)
         # print(self.src)
 
@@ -207,21 +222,25 @@ def main():
     parser.add_argument("--input", "-i", help="<input bitfield source filename>")
     parser.add_argument("--svg", "-s", help="<output SVG image file name>")
 
-    parser.add_argument("--vspace", "-V", type=int, default=80, help="height per lane in px")
-    parser.add_argument("--hspace", "-H", type=int, default=640, help="width per lane in px")
-    parser.add_argument("--lanes", "-L", type=int, default=2, help="number of lane")
-    parser.add_argument("--bits", "-B", type=int, default=32, help="total bitwidth")
-    parser.add_argument("--font-family", "-F", default="sans-serif", help="font family for all texts")
-    parser.add_argument("--font-weight", "-W", default="normal", help="font weight")
-    parser.add_argument("--font-size", "-S", type=int, default=14, help="font size")
+    parser.add_argument("--vspace", "-V", type=int, default=default.vspace,
+                        help="height per lane in px, default is {}".format(default.vspace))
+    parser.add_argument("--hspace", "-H", type=int, default=default.hspace,
+                        help="width per lane in px, default is {}".format(default.hspace))
+    parser.add_argument("--lanes", "-L", type=int, default=default.lanes,
+                        help="number of lane, default is {}".format(default.lanes))
+    parser.add_argument("--bits", "-B", type=int, default=default.bits,
+                        help="total bitwidth, default is {}".format(default.bits))
+    parser.add_argument("--font-family", "-F", default=default.font_family,
+                        help="font family for all texts, default is '{}'".format(default.font_family))
+    parser.add_argument("--font-weight", "-W", default=default.font_weight,
+                        help="font weight, default is '{}'".format(default.font_weight))
+    parser.add_argument("--font-size", "-S", type=int, default=default.font_size,
+                        help="font size, default is {}".format(default.font_size))
     # parser.add_argument("--bigendian", "-E", default=False, help="endian")
 
     attr = AttrDict()
     args = parser.parse_args(namespace=attr)
-    args.vspace = args.vspace
-    args.hspace = args.hspace
-    args.lanes = args.lanes
-    args.bits = args.bits
+
     if args.svg is None or args.input is None:
         parser.print_help()
     else:
