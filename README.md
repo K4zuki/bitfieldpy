@@ -4,6 +4,9 @@ to the original designer.
 
 The library works exactly same as original program, except some of command line options.
 
+- Added `-s/--svg` to output to a file; also can take `-` to output to stdout
+- More strict to JSON format
+
 # Install
 The library requires svgwrite and attrdict libraries.
 
@@ -24,7 +27,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --input INPUT, -i INPUT
                         <input bitfield source filename>
-  --svg SVG, -s SVG     <output SVG image file name>
+  --svg SVG, -s SVG     <output SVG image file name> or '-' to stdout
   --vspace VSPACE, -V VSPACE
                         height per lane in px
   --hspace HSPACE, -H HSPACE

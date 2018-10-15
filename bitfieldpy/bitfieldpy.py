@@ -12,6 +12,8 @@ import json
 from attrdict import AttrDict
 
 default = AttrDict({
+    # "input": "input json filename", --+-- either one required
+    # "src": "input json code",       --'
     "vspace": 80,
     "hspace": 640,
     "lanes": 2,
@@ -27,6 +29,10 @@ class BitField(object):
     def __init__(self, args):
 
         self.args = args
+        if self.args.get("input") is None:
+            self.args.src = self.args.get("src")
+        else:
+            self.args.src = open(self.args.input, "r").read()
         self.src = json.loads(self.args.src, object_hook=AttrDict)
         # set default values
         for key, value in zip(default.keys(), default.values()):
@@ -214,13 +220,16 @@ class BitField(object):
             self.args.index = i
             dwg.add(self.lane())
 
-        dwg.save(pretty=True)
+        if self.args.svg == "-":
+            print(dwg.tostring())
+        else:
+            dwg.save(pretty=True)
 
 
 def main():
     parser = argparse.ArgumentParser(description="bitfield clone in python(experimental)")
     parser.add_argument("--input", "-i", help="<input bitfield source filename>")
-    parser.add_argument("--svg", "-s", help="<output SVG image file name>")
+    parser.add_argument("--svg", "-s", help="<output SVG image file name> or '-' to stdout")
 
     parser.add_argument("--vspace", "-V", type=int, default=default.vspace,
                         help="height per lane in px, default is {}".format(default.vspace))
@@ -244,10 +253,8 @@ def main():
     if args.svg is None or args.input is None:
         parser.print_help()
     else:
-        with open(args.input, "r") as input:
-            args.src = input.read()
-            bf = BitField(args)
-            bf.render()
+        bf = BitField(args)
+        bf.render()
 
 
 if __name__ == "__main__":
