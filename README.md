@@ -2,9 +2,11 @@
 Python3 porting of [bitfield](https://github.com/drom/bitfield) with all respect
 to the original designer.
 
+`python3 bitfield.py bitfield.json > bitfield.svg`
+
 The library works exactly same as original program, except some of command line options.
 
-- Added `-s/--svg` to output to a file; also can take `-` to output to stdout
+- Added `-s/--svg` to output to a file in addition with redirecting(`>`)
 - More strict to JSON format
 
 # Install
@@ -27,7 +29,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --input INPUT, -i INPUT
                         <input bitfield source filename>
-  --svg SVG, -s SVG     <output SVG image file name> or '-' to stdout
+  --svg SVG, -s SVG     <output SVG image file name>
   --vspace VSPACE, -V VSPACE
                         height per lane in px
   --hspace HSPACE, -H HSPACE

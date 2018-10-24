@@ -198,7 +198,7 @@ class BitField(object):
 
     def render(self):
         width = self.args.hspace + 9
-        height = self.args.vspace * self.args.lanes + 5
+        height = self.args.vspace * self.args.lanes + 6
         view = "0 0 {w} {h}".format(w=width, h=height)
         dwg = svgwrite.Drawing(filename=self.args.svg,
                                size=(width, height),
@@ -220,7 +220,7 @@ class BitField(object):
             self.args.index = i
             dwg.add(self.lane())
 
-        if self.args.svg == "-":
+        if self.args.svg is None:
             print(dwg.tostring())
         else:
             dwg.save(pretty=True)
@@ -229,7 +229,8 @@ class BitField(object):
 def main():
     parser = argparse.ArgumentParser(description="bitfield clone in python(experimental)")
     parser.add_argument("--input", "-i", help="<input bitfield source filename>")
-    parser.add_argument("--svg", "-s", help="<output SVG image file name> or '-' to stdout")
+    parser.add_argument("--svg", "-s", default=None,
+                        help="<output SVG image file name> or '-' to stdout")
 
     parser.add_argument("--vspace", "-V", type=int, default=default.vspace,
                         help="height per lane in px, default is {}".format(default.vspace))
@@ -250,7 +251,7 @@ def main():
     attr = AttrDict()
     args = parser.parse_args(namespace=attr)
 
-    if args.svg is None or args.input is None:
+    if args.svg is None and args.input is None:
         parser.print_help()
     else:
         bf = BitField(args)
