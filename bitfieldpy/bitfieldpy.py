@@ -122,14 +122,28 @@ class BitField(object):
                                              font_weight=fontweight
                                              )
                           )
-            else:
-                blanks.add(svgwrite.shapes.Rect(
-                    insert=(step * (self.args.mod - msbm - 1), 0),
-                    size=(step * (msbm - lsbm + 1), self.args.vspace / 2),
-                    fill_opacity=0.1,
-                    # style="fill-opacity:0.5",
-                    fill="black")
-                )
+            if not elem.get("name") or elem.get("type") is not None:
+                res = {2: "orange",
+                       3: "orangered",
+                       4: "springgreen",
+                       5: "chartreuse",
+                       6: "blue",
+                       }
+                ty = elem.get("type")
+                if ty is not None:
+                    fill_color = res.get(ty)
+                    if fill_color is None:
+                        fill_color = "black"
+                else:
+                    fill_color = "black"
+
+                blanks.add(svgwrite.shapes.Rect(insert=(step * (self.args.mod - msbm - 1), 0),
+                                                size=(step * (msbm - lsbm + 1), self.args.vspace / 2),
+                                                fill_opacity=0.1,
+                                                # style="fill-opacity:0.5",
+                                                fill=fill_color
+                                                )
+                           )
             if elem.get("attr"):
                 attrs.add(svgwrite.text.Text(elem.attr,
                                              x=[step * (self.args.mod - ((msbm + lsbm) / 2) - 1)],
