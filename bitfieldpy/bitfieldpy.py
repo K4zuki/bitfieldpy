@@ -11,6 +11,8 @@ import argparse
 import json
 from attrdict import AttrDict
 
+from .version import version
+
 default = AttrDict({
     # "input": "input json filename", --+-- either one required
     # "src": "input json code",       --'
@@ -260,6 +262,7 @@ def main():
                         help="font weight, default is '{}'".format(default.font_weight))
     parser.add_argument("--font-size", "-S", type=int, default=default.font_size,
                         help="font size, default is {}".format(default.font_size))
+    parser.add_argument('--version', action='version', version=str(version))
     # parser.add_argument("--bigendian", "-E", default=False, help="endian")
 
     attr = AttrDict()
