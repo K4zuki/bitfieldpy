@@ -94,9 +94,11 @@ class BitField(object):
                 if int(elem.msb / self.args.mod) == self.args.index:
                     msb = int(elem.msb)
                     msbm = int(elem.msbm)
-
             else:
-                if (int(elem.msb / self.args.mod) == self.args.index):
+                if (int(elem.lsb / self.args.mod) < self.args.index and
+                    int(elem.msb / self.args.mod) > self.args.index):
+                    pass
+                elif (int(elem.msb / self.args.mod) == self.args.index):
                     msb = int(elem.msb)
                     msbm = int(elem.msbm)
                 else:
