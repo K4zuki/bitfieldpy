@@ -11,7 +11,10 @@ import argparse
 import json
 from attrdict import AttrDict
 
-from version import version
+try:
+    from .version import version
+except ImportError:
+    from version import version
 
 default = AttrDict({
     # "input": "input json filename", --+-- either one required
