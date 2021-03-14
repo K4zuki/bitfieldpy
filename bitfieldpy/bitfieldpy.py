@@ -26,6 +26,7 @@ default = AttrDict({
     "font_family": "sans-serif",
     "font_weight": "normal",
     "font_size": 14,
+    "highlight": "",
 })
 
 
@@ -42,6 +43,16 @@ class BitField(object):
         # set default values
         for key, value in zip(default.keys(), default.values()):
             self.args[key] = self.args.get(key, value)
+
+        if args.highlight:
+            hfields = set(args.highlight.split(","))
+            found = set()
+            for j in self.src:
+                if j['name'] in hfields:
+                    j['color'] = "orange"
+                    found.add(j['name'])
+            if hfields - found:
+                print("%s highlight not found" % ",".join(hfields - found))
 
         # print(self.args)
         # print(self.src)
@@ -268,6 +279,8 @@ def main():
                         help="number of lane, default is {}".format(default.lanes))
     parser.add_argument("--bits", "-B", type=int, default=default.bits,
                         help="total bitwidth, default is {}".format(default.bits))
+    parser.add_argument("--highlight", type=str, default=None,
+                        help="Highlight fields. Fields is a comma separated list.")
     parser.add_argument("--font-family", "-F", default=default.font_family,
                         help="font family for all texts, default is '{}'".format(default.font_family))
     parser.add_argument("--font-weight", "-W", default=default.font_weight,
