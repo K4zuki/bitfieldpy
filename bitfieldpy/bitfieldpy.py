@@ -126,26 +126,33 @@ class BitField(object):
                                              font_weight=fontweight
                                              )
                           )
-            if not elem.get("name") or elem.get("type") is not None:
-                res = {2: "orange",
-                       3: "orangered",
-                       4: "springgreen",
-                       5: "chartreuse",
-                       6: "blue",
-                       }
-                ty = elem.get("type")
-                if ty is not None:
-                    fill_color = res.get(ty)
-                    if fill_color is None:
-                        fill_color = "black"
+            args = {"fill_opacity": 0.1}
+            if not elem.get("name") or elem.get("type") is not None or elem.get("color") is not None:
+                if "color" in elem:
+                    fill_color = elem["color"]
+                    args=dict()
                 else:
-                    fill_color = "black"
+                    res = {2: "orange",
+                           3: "orangered",
+                           4: "springgreen",
+                           5: "chartreuse",
+                           6: "blue",
+                           7: "yellow",
+                           8: "darkorange",
+                           9: "crimson",
+                           }
+                    ty = elem.get("type")
+                    if ty is not None:
+                        fill_color = res.get(ty)
+                        if fill_color is None:
+                            fill_color = "black"
+                    else:
+                        fill_color = "black"
 
                 blanks.add(svgwrite.shapes.Rect(insert=(step * (self.args.mod - msbm - 1), 0),
                                                 size=(step * (msbm - lsbm + 1), self.args.vspace / 2),
-                                                fill_opacity=0.1,
-                                                # style="fill-opacity:0.5",
-                                                fill=fill_color
+                                                fill=fill_color,
+                                                **args
                                                 )
                            )
             if elem.get("attr"):
