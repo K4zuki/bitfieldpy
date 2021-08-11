@@ -10,6 +10,7 @@ import svgwrite
 import argparse
 import json
 from attrdict import AttrDict
+import sys
 
 default = AttrDict({
     # "input": "input json filename", --+-- either one required
@@ -47,7 +48,7 @@ class BitField(object):
                     j['color'] = "orange"
                     found.add(j['name'])
             if hfields - found:
-                print("%s highlight not found" % ",".join(hfields - found))
+                print("%s highlight not found" % ",".join(hfields - found), file=sys.stderr)
 
         # print(self.args)
         # print(self.src)
@@ -125,14 +126,15 @@ class BitField(object):
                                             x=[step * (self.args.mod - msbm - 1)],
                                             font_size=str(fontsize),
                                             font_family=fontfamily,
-                                            font_weight=fontweight
+                                            font_weight=fontweight 
                                             ))
             if elem.get("name"):
                 names.add(svgwrite.text.Text(elem.name,
                                              x=[step * (self.args.mod - ((msbm + lsbm) / 2) - 1)],
                                              font_size=fontsize,
-                                             font_family=fontfamily,
-                                             font_weight=fontweight
+                                             font_family=fontfamily ,
+                                             font_weight="bold" if "bold" in elem else fontweight,
+                                             stroke_width="5" if "bold" in elem else "1"
                                              )
                           )
             args = {"fill_opacity": 0.1}
