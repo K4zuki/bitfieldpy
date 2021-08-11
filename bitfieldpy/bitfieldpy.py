@@ -10,8 +10,7 @@ import svgwrite
 import argparse
 import json
 from attrdict import AttrDict
-
-from .version import version
+import sys
 
 default = AttrDict({
     # "input": "input json filename", --+-- either one required
@@ -23,6 +22,7 @@ default = AttrDict({
     "font_family": "sans-serif",
     "font_weight": "normal",
     "font_size": 14,
+    "highlight": "",
 })
 
 
@@ -39,6 +39,16 @@ class BitField(object):
         # set default values
         for key, value in zip(default.keys(), default.values()):
             self.args[key] = self.args.get(key, value)
+
+        if args.highlight:
+            hfields = set(args.highlight.split(","))
+            found = set()
+            for j in self.src:
+                if j['name'] in hfields:
+                    j['color'] = "orange"
+                    found.add(j['name'])
+            if hfields - found:
+                print("%s highlight not found" % ",".join(hfields - found), file=sys.stderr)
 
         # print(self.args)
         # print(self.src)
@@ -94,9 +104,11 @@ class BitField(object):
                 if int(elem.msb / self.args.mod) == self.args.index:
                     msb = int(elem.msb)
                     msbm = int(elem.msbm)
-
             else:
-                if (int(elem.msb / self.args.mod) == self.args.index):
+                if (int(elem.lsb / self.args.mod) < self.args.index and
+                    int(elem.msb / self.args.mod) > self.args.index):
+                    pass
+                elif (int(elem.msb / self.args.mod) == self.args.index):
                     msb = int(elem.msb)
                     msbm = int(elem.msbm)
                 else:
@@ -114,36 +126,44 @@ class BitField(object):
                                             x=[step * (self.args.mod - msbm - 1)],
                                             font_size=str(fontsize),
                                             font_family=fontfamily,
-                                            font_weight=fontweight
+                                            font_weight=fontweight 
                                             ))
             if elem.get("name"):
                 names.add(svgwrite.text.Text(elem.name,
                                              x=[step * (self.args.mod - ((msbm + lsbm) / 2) - 1)],
                                              font_size=fontsize,
-                                             font_family=fontfamily,
-                                             font_weight=fontweight
+                                             font_family=fontfamily ,
+                                             font_weight="bold" if "bold" in elem else fontweight,
+                                             stroke_width="5" if "bold" in elem else "1"
                                              )
                           )
-            if not elem.get("name") or elem.get("type") is not None:
-                res = {2: "orange",
-                       3: "orangered",
-                       4: "springgreen",
-                       5: "chartreuse",
-                       6: "blue",
-                       }
-                ty = elem.get("type")
-                if ty is not None:
-                    fill_color = res.get(ty)
-                    if fill_color is None:
-                        fill_color = "black"
+            args = {"fill_opacity": 0.1}
+            if not elem.get("name") or elem.get("type") is not None or elem.get("color") is not None:
+                if "color" in elem:
+                    fill_color = elem["color"]
+                    args=dict()
                 else:
-                    fill_color = "black"
+                    res = {2: "orange",
+                           3: "orangered",
+                           4: "springgreen",
+                           5: "chartreuse",
+                           6: "blue",
+                           7: "yellow",
+                           8: "darkorange",
+                           9: "crimson",
+                           }
+                    ty = elem.get("type")
+                    if ty is not None:
+                        fill_color = res.get(ty)
+                        if fill_color is None:
+                            fill_color = "black"
+                    else:
+                        fill_color = "black"
 
                 blanks.add(svgwrite.shapes.Rect(insert=(step * (self.args.mod - msbm - 1), 0),
                                                 size=(step * (msbm - lsbm + 1), self.args.vspace / 2),
-                                                fill_opacity=0.1,
-                                                # style="fill-opacity:0.5",
-                                                fill=fill_color
+                                                fill=fill_color,
+                                                **args
                                                 )
                            )
             if elem.get("attr"):
@@ -256,13 +276,15 @@ def main():
                         help="number of lane, default is {}".format(default.lanes))
     parser.add_argument("--bits", "-B", type=int, default=default.bits,
                         help="total bitwidth, default is {}".format(default.bits))
+    parser.add_argument("--highlight", type=str, default=None,
+                        help="Highlight fields. Fields is a comma separated list.")
     parser.add_argument("--font-family", "-F", default=default.font_family,
                         help="font family for all texts, default is '{}'".format(default.font_family))
     parser.add_argument("--font-weight", "-W", default=default.font_weight,
                         help="font weight, default is '{}'".format(default.font_weight))
     parser.add_argument("--font-size", "-S", type=int, default=default.font_size,
                         help="font size, default is {}".format(default.font_size))
-    parser.add_argument('--version', action='version', version=str(version))
+    parser.add_argument('--version', action='version', version=str("version"))
     # parser.add_argument("--bigendian", "-E", default=False, help="endian")
 
     attr = AttrDict()
